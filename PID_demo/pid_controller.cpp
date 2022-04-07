@@ -1,14 +1,20 @@
-#include "pid_controller.h"
-
 #include <Arduino.h>
+
+#include "pid_controller.h"
 
 static float P = 0, I = 0, D = 0;
 
 static void AntiWindup(const ProgramState * state){
+	/*
+		Only run if anti-windup is enabled.
+	*/
 	if(!state->anti_windup){
 		return;
 	}
 	
+	/*
+		Reset 'I' if it would cause saturation.
+	*/
 	if(I > OUT_MAX || I < OUT_MIN){
 		I = 0;
 	}

@@ -1,23 +1,39 @@
-#include "display.h"
-
 #include <Arduino.h>
 #include <LiquidCrystal_I2C.h>
 
-enum Row {
-	ROW_0 = 0,
-	ROW_1,
-	ROW_COUNT
-};
+#include "display.h"
 
-#define COLUMN_COUNT	16
-
-static LiquidCrystal_I2C lcd(PCF8574_I2C_ADDR, PCF8574_LCD_COLUMNS, PCF8574_LCD_ROWS);
+static LiquidCrystal_I2C lcd(PCF8574_I2C_ADDR, COLUMN_COUNT, ROW_COUNT);
 static uint8_t mode = DISPLAY_HOME;
 
+/*
+    In order to prevent previous characters to remain on the screen
+    a "backbuffer" is used to keep track the content of the display.
+    If an update wolud result previous characters to remain on the screen
+    the appropriate row is cleared.
+    
+    Too fequent clearing will result flickering, so it is not suitable to
+    clear before every update.
+*/
+
+/*
+    Backbuffer containing enought space for the 2 rows and the 16 columns
+     + 1 extra character for termination of the string.
+*/
 static char buffer[ROW_COUNT][COLUMN_COUNT + 1];
-static uint8_t buffer_count[ROW_COUNT];
+static uint8_t buffer_count[ROW_COUNT];     // number of characters in the buffer
+/*
+    Number of characters currentiy on the display.
+    This is used to decide if clearing is necessary.
+*/
 static uint8_t prev_buffer_count[ROW_COUNT] = { COLUMN_COUNT, COLUMN_COUNT };
+
 static char empty_line[COLUMN_COUNT + 1] = "                ";
+
+/*
+    Buffer for float to string conversion.
+    snprintf() is not working for floats.
+*/
 static char float_buffer[10];
 
 static void ClearRow(int row){
@@ -25,6 +41,10 @@ static void ClearRow(int row){
 	lcd.print(empty_line);
 }
 
+/*
+    The status of the controller is always present in the display
+    and does not affect the clearing mechanism.
+*/
 static void UpdateStatus(const ProgramState * state){
 	lcd.setCursor(14, ROW_0);
 	lcd.print(state->is_running ? '*' : 'x');
@@ -59,17 +79,27 @@ static void InternalErrorScreen(void){
 	buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
 }
 
+/*
+    The task of ths function is to check if clearing in nessessary, clear if needed
+    and update the contents of the display.
+*/
 static void DisplayBuffer(void){
-	for(uint8_t i = 0; i < ROW_COUNT; ++i){
-		if(buffer_count[i] < prev_buffer_count[i]){
-			ClearRow(i);
-		}
-		
-		lcd.setCursor(0, i);
-		lcd.print(buffer[i]);
-		
-		prev_buffer_count[i] = buffer_count[i];
-	}
+    for(uint8_t i = 0; i < ROW_COUNT; ++i){
+        /*
+            If the backbuffer contains less characters than the currently displayed line,
+            the update wolud cause junk characters on the screen, so it is nessessary
+            to clear the line.
+        */
+        if(buffer_count[i] < prev_buffer_count[i]){
+            ClearRow(i);
+        }
+
+        lcd.setCursor(0, i);
+        lcd.print(buffer[i]);
+
+        /* Update the number of currently displayed characters. */
+        prev_buffer_count[i] = buffer_count[i];
+    }
 }
 
 void InitDisplay(void) {
@@ -92,6 +122,10 @@ void UpdateDisplay(const ProgramState * state) {
 	UpdateStatus(state);
 }
 
+/*
+    Change the currently displayed screen. 
+    The screens will get around.
+*/
 void StepDisplayMode(void){
 	mode = (++mode) % DISPLAY_MODE_COUNT;
 }

@@ -3,8 +3,13 @@
 
 #include "program_state.h"
 
-#define OUT_MIN		-90
-#define OUT_MAX		90
+/* 
+    Range of the control signal of the controller.
+    The actuator is a servo motor with a 180 degree rotational range
+    and the accuracity of 1 degree.
+*/
+#define OUT_MIN -90
+#define OUT_MAX 90
 
 float UpdateController(const ProgramState * state, float delta_time);
 

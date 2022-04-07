@@ -3,10 +3,22 @@
 
 #include "program_state.h"
 
-#define PCF8574_I2C_ADDR 0x27
-#define PCF8574_LCD_COLUMNS 16
-#define PCF8574_LCD_ROWS    2
+#define PCF8574_I2C_ADDR    0x27    /* I2C address of the device */
 
+/* 
+    The resolution of the display is 16x2 in characters.
+*/
+enum Row {
+	ROW_0 = 0,
+	ROW_1,
+	ROW_COUNT
+};
+
+#define COLUMN_COUNT	16
+
+/*
+    The possible display modes (screens).
+*/
 enum DisplayMode {
 	DISPLAY_HOME = 0,
 	DISPLAY_PID1,
