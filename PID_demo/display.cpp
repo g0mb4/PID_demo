@@ -55,8 +55,12 @@ static void HomeScreen(const ProgramState * state){
 	dtostrf(state->set_point, 2, 2, float_buffer);
 	buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "SP=%s", float_buffer);
 	
-	dtostrf(state->control_error, 2, 2, float_buffer);
-	buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "e=%s", float_buffer);
+	if(state->is_running){
+	    dtostrf(state->control_error, 2, 2, float_buffer);
+	    buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "e=%s", float_buffer);
+	} else {
+	    buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
+	}
 }
 
 static void PID1Screen(const ProgramState * state){
