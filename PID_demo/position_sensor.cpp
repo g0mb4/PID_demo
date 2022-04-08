@@ -15,7 +15,7 @@ float ReadSensor(void){
 	/*
 	    Using a low-pass filter to minimalize noise.
 	*/
-	for(uint16_t i = 0; i < SENSOR_NO_MEASUREMENTS; ++i){
+	for(uint8_t i = 0; i < SENSOR_NO_MEASUREMENTS; ++i){
 		sum += analogRead(SENSOR_ANALOG_PIN);
 	}
 
