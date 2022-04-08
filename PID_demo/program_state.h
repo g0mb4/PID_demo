@@ -3,6 +3,23 @@
 
 #include <Arduino.h>
 
+/* short-hand macros */
+#define OM(s)   (s)->operation_mode
+#define DM(s)   (s)->display_mode
+
+/* SP macro is used for Stack Pointer */
+#undef SP
+
+#define SP(s)   (s)->set_point
+#define PV(s)   (s)->process_value
+
+#define E(s)    (s)->control_error
+#define DE(s)   (s)->control_error_difference
+
+#define KP(s)   (s)->k_P
+#define KI(s)   (s)->k_I
+#define KD(s)   (s)->k_D
+
 /*
 	The program state is used to pass data between modules.
 */

@@ -16,7 +16,7 @@ void InitControlSystem(void){
 }
 
 static void RunManual(ProgramState * state){
-    state->sensor_value = ReadSensor();
+    PV(state) = ReadSensor();
 
     WriteServoMotor(state->manual);
 }
@@ -32,10 +32,10 @@ static void RunPID(ProgramState * state){
             + decision making   |
             + acting          --+
     */
-	state->sensor_value = ReadSensor();
+	PV(state) = ReadSensor();
 	
-	state->control_error = state->set_point - state->sensor_value;
-	state->dcontrol_error = state->control_error - prev_error;
+	E(state) = SP(state) - PV(state);
+	DE(state) = E(state) - prev_error;
 
 	float control_signal = UpdateController(state, DELTA_TIME_MS);
 	
@@ -43,7 +43,7 @@ static void RunPID(ProgramState * state){
 	WriteServoMotor(acting_signal);
 
 	prev_run_time = millis();
-	prev_error = state->control_error;
+	prev_error = E(state);
 }
 
 void RunControlSystem(ProgramState * state){
@@ -51,12 +51,12 @@ void RunControlSystem(ProgramState * state){
         return;
     }
 
-    if(state->operation_mode == MANUAL){
+    if(OM(state) == MANUAL){
         RunManual(state);
-    } else if (state->operation_mode >= PID && state->operation_mode <= PID_AW2){
+    } else if (OM(state) >= PID && OM(state) <= PID_AW3){
         RunPID(state);
     } else {
         Serial.print("ERROR: unknown state");
-        Serial.println(state->operation_mode);
+        Serial.println(OM(state));
     }
 }

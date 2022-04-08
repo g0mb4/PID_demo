@@ -27,17 +27,19 @@ static void AntiWindup2(const ProgramState * state){
 }
 
 float UpdateController(const ProgramState * state, float delta_time) {
-	float P = state->k_P * state->control_error;
-	float dI = state->k_I  * state->control_error * delta_time;
-	float D = state->k_D * (state->dcontrol_error / delta_time);
+	float P = KP(state) * E(state);
+	float dI = KI(state) * E(state) * delta_time;
+	float D = KD(state) * DE(state) / delta_time;
 	
     I += dI;
     
 	float control_signal = P + D + I;
 	
-	if(state->operation_mode == PID_AW1){
+	if(OM(state) == PID_AW1 || OM(state) == PID_AW3){
 	    control_signal = AntiWindup1(control_signal, dI);
-	} else if(state->operation_mode == PID_AW2){
+	}
+	
+	if(OM(state) == PID_AW2 || OM(state) == PID_AW3){
 	    AntiWindup2(state);
 	}
 	

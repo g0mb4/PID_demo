@@ -50,12 +50,13 @@ static void UpdateOperationModeLayout(const ProgramState * state){
 	lcd.setCursor(14, ROW_0);
 	lcd.print(state->is_running ? '*' : 'x');
 	
-	char op_mode;
-	switch(state->operation_mode){
+	char op_mode = 'E';
+	switch(OM(state)){
 	    case MANUAL: op_mode = 'M'; break;
 	    case PID: op_mode = 'C'; break;
 	    case PID_AW1: op_mode = '1'; break;
 	    case PID_AW2: op_mode = '2'; break;
+	    case PID_AW3: op_mode = '3'; break;
 	    case OPERATION_MODE_COUNT:
 	    default:
 	        op_mode = 'E';
@@ -65,22 +66,22 @@ static void UpdateOperationModeLayout(const ProgramState * state){
 }
 
 static void HomeScreen(const ProgramState * state){
-	if(state->operation_mode == MANUAL){
+	if(OM(state) == MANUAL){
 	    dtostrf(state->manual, 2, 2, float_buffer);
 	    buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "MOT=%s", float_buffer);
 	    
         if(state->is_running){
-            dtostrf(state->sensor_value, 2, 2, float_buffer);
+            dtostrf(PV(state), 2, 2, float_buffer);
             buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "SEN=%s", float_buffer);
         } else {
             buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
         }
 	} else {
-	    dtostrf(state->set_point, 2, 2, float_buffer);
+	    dtostrf(SP(state), 2, 2, float_buffer);
 	    buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "SP=%s", float_buffer);
 	    
 	    if(state->is_running){
-	        dtostrf(state->control_error, 2, 2, float_buffer);
+	        dtostrf(E(state), 2, 2, float_buffer);
 	        buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "e=%s", float_buffer);
 	    } else {
 	        buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
@@ -89,15 +90,15 @@ static void HomeScreen(const ProgramState * state){
 }
 
 static void PID1Screen(const ProgramState * state){
-	dtostrf(state->k_P, 2, 2, float_buffer);
+	dtostrf(KP(state), 2, 2, float_buffer);
 	buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "k_P=%s", float_buffer);
 	
-	dtostrf(state->k_I, 1, 5, float_buffer);
+	dtostrf(KI(state), 1, 5, float_buffer);
 	buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "k_I=%s", float_buffer);
 }
 
 static void PID2Screen(const ProgramState * state){
-	dtostrf(state->k_D, 3, 1, float_buffer);
+	dtostrf(KD(state), 3, 1, float_buffer);
 	buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "k_D=%s", float_buffer);
 	
 	buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
@@ -137,7 +138,7 @@ void InitDisplay(void) {
 }
 
 void UpdateDisplay(const ProgramState * state) {
-	switch (state->display_mode) {
+	switch (DM(state)) {
 	case DISPLAY_HOME: HomeScreen(state); break;
 	case DISPLAY_PID1: PID1Screen(state); break;
 	case DISPLAY_PID2: PID2Screen(state); break;
@@ -156,5 +157,5 @@ void UpdateDisplay(const ProgramState * state) {
     The screens will get around.
 */
 void StepDisplayMode(ProgramState * state){
-	state->display_mode = (++state->display_mode) % DISPLAY_MODE_COUNT;
+	DM(state) = (++DM(state)) % DISPLAY_MODE_COUNT;
 }

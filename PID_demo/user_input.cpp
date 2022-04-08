@@ -69,9 +69,9 @@ void ReadUserInput(ProgramState * state){
     }
 
     state->manual = ReadAD(SP_MAN_AN, SERVO_MIN_POS, SERVO_MAX_POS);
-    state->set_point = ReadAD(SP_MAN_AN, SP_MIN, SP_MAX);
+    SP(state) = ReadAD(SP_MAN_AN, SP_MIN, SP_MAX);
 
-    state->k_P = ReadAD(KP_AN, KP_MIN, KP_MAX);
-    state->k_I = ReadAD(KI_AN, KI_MIN, KI_MAX);
-    state->k_D = ReadAD(KD_AN, KD_MIN, KD_MAX);
+    KP(state) = ReadAD(KP_AN, KP_MIN, KP_MAX);
+    KI(state) = ReadAD(KI_AN, KI_MIN, KI_MAX);
+    KD(state) = ReadAD(KD_AN, KD_MIN, KD_MAX);
 }
