@@ -5,6 +5,8 @@
 	Used libraries: 
 		Button:	https://github.com/madleech/Button
 		LiquidCrystal_I2C: https://github.com/johnrickman/LiquidCrystal_I2C
+		
+	2022, Tóth János
 */
 
 #include "display.h"
