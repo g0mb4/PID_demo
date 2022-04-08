@@ -8,6 +8,7 @@ enum OperationMode {
     PID,
     PID_AW1,
     PID_AW2,
+    PID_AW3,
     OPERATION_MODE_COUNT
 };
 

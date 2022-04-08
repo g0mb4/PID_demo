@@ -11,7 +11,7 @@
 #define OUT_MIN -90
 #define OUT_MAX 90
 
-#define AW2_TRESHOLD    0.1
+#define AW2_TRESHOLD    1
 
 float UpdateController(const ProgramState * state, float delta_time);
 

@@ -7,7 +7,7 @@ static float I = 0;
 
 static float AntiWindup1(float control_signal, float dI){
 	/*
-		Neglect integrator after output saturates.
+		Neglect the contribution of the integrator after output saturates.
 	*/
 	if(control_signal > OUT_MAX || control_signal < OUT_MIN){
 	    I -= dI;
@@ -19,7 +19,7 @@ static float AntiWindup1(float control_signal, float dI){
 
 static void AntiWindup2(const ProgramState * state){
 	/*
-		Reset integral.
+		Reset integrator.
 	*/
 	if(state->control_error < AW2_TRESHOLD && state->control_error > -AW2_TRESHOLD){
 	    I = 0;
