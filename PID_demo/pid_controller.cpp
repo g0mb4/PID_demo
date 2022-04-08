@@ -1,6 +1,7 @@
 #include <Arduino.h>
 
 #include "pid_controller.h"
+#include "operation_mode.h"
 
 static float I = 0;
 
@@ -8,7 +9,7 @@ static float AntiWindup(const ProgramState * state, float control_signal, float 
 	/*
 		Only run if anti-windup is enabled.
 	*/
-	if(!state->anti_windup){
+	if(state->operation_mode != PID_AW1){
 		return control_signal;
 	}
 	

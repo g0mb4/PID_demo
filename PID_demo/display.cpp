@@ -2,6 +2,7 @@
 #include <LiquidCrystal_I2C.h>
 
 #include "display.h"
+#include "operation_mode.h"
 
 static LiquidCrystal_I2C lcd(PCF8574_I2C_ADDR, COLUMN_COUNT, ROW_COUNT);
 static uint8_t mode = DISPLAY_HOME;
@@ -45,21 +46,45 @@ static void ClearRow(int row){
     The status of the controller is always present in the display
     and does not affect the clearing mechanism.
 */
-static void UpdateStatus(const ProgramState * state){
+static void UpdateOperationModeLayout(const ProgramState * state){
 	lcd.setCursor(14, ROW_0);
 	lcd.print(state->is_running ? '*' : 'x');
-	lcd.print(state->anti_windup ? 'A' : '-');
+	
+	char op_mode;
+	switch(state->operation_mode){
+	    case MANUAL: op_mode = 'M'; break;
+	    case PID: op_mode = 'C'; break;
+	    case PID_AW1: op_mode = '1'; break;
+	    case PID_AW2: op_mode = '2'; break;
+	    case OPERATION_MODE_COUNT:
+	    default:
+	        op_mode = 'E';
+	}
+	
+	lcd.print(op_mode);
 }
 
 static void HomeScreen(const ProgramState * state){
-	dtostrf(state->set_point, 2, 2, float_buffer);
-	buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "SP=%s", float_buffer);
-	
-	if(state->is_running){
-	    dtostrf(state->control_error, 2, 2, float_buffer);
-	    buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "e=%s", float_buffer);
+	if(state->operation_mode == MANUAL){
+	    dtostrf(state->manual, 2, 2, float_buffer);
+	    buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "MOT=%s", float_buffer);
+	    
+        if(state->is_running){
+            dtostrf(state->sensor_value, 2, 2, float_buffer);
+            buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "SEN=%s", float_buffer);
+        } else {
+            buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
+        }
 	} else {
-	    buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
+	    dtostrf(state->set_point, 2, 2, float_buffer);
+	    buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "SP=%s", float_buffer);
+	    
+	    if(state->is_running){
+	        dtostrf(state->control_error, 2, 2, float_buffer);
+	        buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "e=%s", float_buffer);
+	    } else {
+	        buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
+	    }
 	}
 }
 
@@ -112,7 +137,7 @@ void InitDisplay(void) {
 }
 
 void UpdateDisplay(const ProgramState * state) {
-	switch (mode) {
+	switch (state->display_mode) {
 	case DISPLAY_HOME: HomeScreen(state); break;
 	case DISPLAY_PID1: PID1Screen(state); break;
 	case DISPLAY_PID2: PID2Screen(state); break;
@@ -123,13 +148,13 @@ void UpdateDisplay(const ProgramState * state) {
 	}
 	
 	DisplayBuffer();
-	UpdateStatus(state);
+	UpdateOperationModeLayout(state);
 }
 
 /*
     Change the currently displayed screen. 
     The screens will get around.
 */
-void StepDisplayMode(void){
-	mode = (++mode) % DISPLAY_MODE_COUNT;
+void StepDisplayMode(ProgramState * state){
+	state->display_mode = (++state->display_mode) % DISPLAY_MODE_COUNT;
 }

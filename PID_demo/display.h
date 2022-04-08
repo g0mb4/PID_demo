@@ -29,6 +29,6 @@ enum DisplayMode {
 void InitDisplay(void);
 void UpdateDisplay(const ProgramState * state);
 
-void StepDisplayMode(void);
+void StepDisplayMode(ProgramState * state);
 
 #endif

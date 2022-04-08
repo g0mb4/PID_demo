@@ -3,18 +3,20 @@
 
 #include "display.h"
 #include "user_input.h"
+#include "servo_motor.h"
+#include "operation_mode.h"
 #include "utils.h"
 
 static Button btn_display_mode(BTN_DISPLAY_MODE_PIN);
 static Button btn_start_stop(BTN_START_STOP_PIN);
-static Button btn_anti_windup(BTN_ANTI_WINDUP_PIN);
+static Button btn_operation_mode(BTN_OP_MODE_PIN);
 
 void InitUserInput(void){
     btn_display_mode.begin();
     btn_start_stop.begin();
-    btn_anti_windup.begin();
+    btn_operation_mode.begin();
 
-    pinMode(SET_POINT_AN, INPUT);
+    pinMode(SP_MAN_AN, INPUT);
     pinMode(KP_AN, INPUT);
     pinMode(KI_AN, INPUT);
     pinMode(KD_AN, INPUT);
@@ -59,14 +61,16 @@ void ReadUserInput(ProgramState * state){
     }
 
     if(btn_display_mode.released()){
-        StepDisplayMode();
+        StepDisplayMode(state);
     }
 
-    if(btn_anti_windup.released()){
-        state->anti_windup = !state->anti_windup;
+    if(btn_operation_mode.released()){
+        StepOperationMode(state);
     }
 
-    state->set_point = ReadAD(SET_POINT_AN, SP_MIN, SP_MAX);
+    state->manual = ReadAD(SP_MAN_AN, SERVO_MIN_POS, SERVO_MAX_POS);
+    state->set_point = ReadAD(SP_MAN_AN, SP_MIN, SP_MAX);
+
     state->k_P = ReadAD(KP_AN, KP_MIN, KP_MAX);
     state->k_I = ReadAD(KI_AN, KI_MIN, KI_MAX);
     state->k_D = ReadAD(KD_AN, KD_MIN, KD_MAX);
