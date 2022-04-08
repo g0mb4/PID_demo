@@ -3,7 +3,7 @@
 #include "position_sensor.h"
 
 void InitSensor(void){
-    pinMode(SENSOR_ANALOG_PIN, INPUT); 
+    pinMode(SENSOR_AN, INPUT);
 }
 
 /*
@@ -16,7 +16,7 @@ float ReadSensor(void){
 	    Using a low-pass filter to minimalize noise.
 	*/
 	for(uint8_t i = 0; i < SENSOR_NO_MEASUREMENTS; ++i){
-		sum += analogRead(SENSOR_ANALOG_PIN);
+		sum += analogRead(SENSOR_AN);
 	}
 
 	float adc = sum / SENSOR_NO_MEASUREMENTS;
