@@ -21,7 +21,7 @@ static LiquidCrystal_I2C lcd(PCF8574_I2C_ADDR, COLUMN_COUNT, ROW_COUNT);
      + 1 extra character for termination of the string.
 */
 static char buffer[ROW_COUNT][COLUMN_COUNT + 1];
-static uint8_t buffer_count[ROW_COUNT];     // number of characters in the buffer
+static uint8_t buffer_count[ROW_COUNT];     /* number of characters in the buffer */
 /*
     Number of characters currentiy on the display.
     This is used to decide if clearing is necessary.
@@ -109,7 +109,7 @@ static void InternalErrorScreen(void){
 }
 
 /*
-    The task of ths function is to check if clearing in nessessary, clear if needed
+    The task of ths function is to check if clearing is nessessary, clear if needed
     and update the contents of the display.
 */
 static void DisplayBuffer(void){
@@ -153,7 +153,7 @@ void UpdateDisplay(const ProgramState * state) {
 
 /*
     Change the currently displayed screen. 
-    The screens will get around.
+    The screens will be cycling.
 */
 void StepDisplayMode(ProgramState * state){
 	DM(state) = (++DM(state)) % DISPLAY_MODE_COUNT;

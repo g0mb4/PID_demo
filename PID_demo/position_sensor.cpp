@@ -23,7 +23,7 @@ float ReadSensor(void){
 	
 	/*
 	    This function converts the raw ADC value to a distance measured in cm-s.
-	    The function is a result of the data fitting of measurements.
+	    The function is a result of curve fitting on measured data points.
 	*/
 	float distance = 259643 * pow(adc, -1.717);
 	

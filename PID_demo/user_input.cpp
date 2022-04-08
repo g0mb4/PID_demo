@@ -24,7 +24,7 @@ void InitUserInput(void){
 
 /*
 	Generic function to read the value of an ADC pin into a specified range
-	using a simple techniques to prevent noise.
+	using simple techniques to prevent noise.
 */
 static float ReadAD(int pin, float min, float max){
     uint32_t sum = 0;
