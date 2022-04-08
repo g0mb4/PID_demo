@@ -8,13 +8,13 @@
 #include "utils.h"
 
 /* 
-    Pevious error used to determine error difference.
+    Pevious error used to determine the error difference.
 */
 static float prev_error = 0;
 
 /*
     Time of the previous control step 
-    used to decide if control action can happen.
+    used to decide if control action should happen.
 */
 static uint32_t prev_run_time = 0;
 
