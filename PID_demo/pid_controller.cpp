@@ -13,7 +13,7 @@ static float AntiWindup(const ProgramState * state, float control_signal, float 
 	}
 	
 	/*
-		Neglect integrator if output saturates.
+		Neglect integrator after output saturates.
 	*/
 	if(control_signal > OUT_MAX || control_signal < OUT_MIN){
 	    I -= dI;

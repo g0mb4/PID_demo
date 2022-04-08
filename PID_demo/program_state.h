@@ -15,7 +15,7 @@ typedef struct {
 	float set_point;		/* SP of the control system*/
 	bool is_running;		/* is control system running? */
 	float control_error;	/* error of the control */
-	float dcontrol_error;	/* "derivative" of error */
+	float dcontrol_error;	/* difference of error */
 } ProgramState;
 
 #endif
