@@ -35,13 +35,13 @@ typedef struct {
 	float k_D;				/* coefficient of the D member */
 	
 	/* control_system */
-	float set_point;        /* SP of the control system */
-	bool is_running;		/* is control system running? */
-	float control_error;	/* error of the control */
-	float dcontrol_error;	/* difference of error */
+	float set_point;                /* set point of the control system */
+	bool is_running;		        /* is control system running? */
+	float control_error;	        /* error of the control */
+	float control_error_difference;	/* difference of error */
 	
 	/* sensor */
-	float sensor_value;
+	float process_value;     /* sensor data */
 } ProgramState;
 
 #endif
