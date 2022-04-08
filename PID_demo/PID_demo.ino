@@ -15,6 +15,10 @@
 static ProgramState state;
 
 void setup() {
+    /*
+        The Serial is for debugging,
+        it can be used anywhere in the program.
+    */
     Serial.begin(9600);
 
     InitUserInput();
