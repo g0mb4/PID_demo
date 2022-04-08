@@ -15,26 +15,35 @@ void InitControlSystem(void){
 }
 
 void RunControlSystem(ProgramState * state){
-	if (!state->is_running || millis() < prev_run_time + DELTA_TIME_MS) {
+	if (!state->is_running) {
 		return;
 	}
-
+	
     /*
         Typical control loop:
             + gathering data  <-+
             + decision making   |
             + acting          --+
     */
+	uint32_t time = millis();
+	
+	/*
+	    Note: Time will overrun after approximately 
+	    49 days 17 hours 2 minutes and 47 seconds.
+	    This case won't be handled.
+	*/
+	uint32_t delta_time = time - prev_run_time;
+	
 	float process_value = ReadSensor();
 	
 	state->control_error = state->set_point - process_value;
 	state->dcontrol_error = state->control_error - prev_error;
 
-	float control_signal = UpdateController(state, DELTA_TIME_MS);
+	float control_signal = UpdateController(state, delta_time);
 	
 	float acting_signal = mapf(control_signal, OUT_MIN, OUT_MAX, SERVO_MIN_POS, SERVO_MAX_POS);
 	WriteServoMotor(acting_signal);
 
-	prev_run_time = millis();
+	prev_run_time = time;
 	prev_error = state->control_error;
 }
