@@ -5,14 +5,7 @@
 
 static float I = 0;
 
-static float AntiWindup(const ProgramState * state, float control_signal, float dI){
-	/*
-		Only run if anti-windup is enabled.
-	*/
-	if(state->operation_mode != PID_AW1){
-		return control_signal;
-	}
-	
+static float AntiWindup1(float control_signal, float dI){
 	/*
 		Neglect integrator after output saturates.
 	*/
@@ -24,6 +17,15 @@ static float AntiWindup(const ProgramState * state, float control_signal, float 
 	return control_signal;
 }
 
+static void AntiWindup2(const ProgramState * state){
+	/*
+		Reset integral.
+	*/
+	if(state->control_error < AW2_TRESHOLD && state->control_error > -AW2_TRESHOLD){
+	    I = 0;
+	}
+}
+
 float UpdateController(const ProgramState * state, float delta_time) {
 	float P = state->k_P * state->control_error;
 	float dI = state->k_I  * state->control_error * delta_time;
@@ -33,7 +35,11 @@ float UpdateController(const ProgramState * state, float delta_time) {
     
 	float control_signal = P + D + I;
 	
-	control_signal = AntiWindup(state, control_signal, dI);
+	if(state->operation_mode == PID_AW1){
+	    control_signal = AntiWindup1(control_signal, dI);
+	} else if(state->operation_mode == PID_AW2){
+	    AntiWindup2(state);
+	}
 	
 	control_signal = constrain(control_signal, OUT_MIN, OUT_MAX);
 
