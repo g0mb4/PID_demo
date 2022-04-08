@@ -9,7 +9,7 @@
 #define BTN_START_STOP_PIN      12
 
 /* analog pins of the potentiometers */
-#define SP_MAN_AN   A1
+#define SP_MAN_AN   A1  /* SP in control mode, manual in manual mode */
 #define KP_AN       A2
 #define KI_AN       A3
 #define KD_AN       A4

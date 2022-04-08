@@ -5,7 +5,6 @@
 #include "operation_mode.h"
 
 static LiquidCrystal_I2C lcd(PCF8574_I2C_ADDR, COLUMN_COUNT, ROW_COUNT);
-static uint8_t mode = DISPLAY_HOME;
 
 /*
     In order to prevent previous characters to remain on the screen

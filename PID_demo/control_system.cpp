@@ -7,8 +7,16 @@
 #include "servo_motor.h"
 #include "utils.h"
 
-static float prev_error = 0;        // pevious error, used to determine derror
-static uint32_t prev_run_time = 0;  // time of the previous control step
+/* 
+    Pevious error used to determine error difference.
+*/
+static float prev_error = 0;
+
+/*
+    Time of the previous control step 
+    used to decide if control action can happen.
+*/
+static uint32_t prev_run_time = 0;
 
 void InitControlSystem(void){
     InitSensor();

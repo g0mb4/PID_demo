@@ -27,15 +27,14 @@ typedef struct {
     uint8_t operation_mode;	/* operation mode */
     uint8_t display_mode;   /* display mode */
 
-    float manual;           /* output in manual mode (same pin as SP) */ 
-
-	/* pid_controller */
+	/* PID controller */
 	float k_P;				/* coefficient of the P member */
 	float k_I;				/* coefficient of the I member */
 	float k_D;				/* coefficient of the D member */
 	
-	/* control_system */
+	/* control system */
 	float set_point;                /* set point of the control system */
+	float manual;                   /* output in manual mode (same pin as set_point) */ 
 	bool is_running;		        /* is control system running? */
 	float control_error;	        /* error of the control */
 	float control_error_difference;	/* difference of error */
