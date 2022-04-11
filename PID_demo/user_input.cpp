@@ -36,13 +36,13 @@ static float ReadAD(int pin, float min, float max){
         sum += analogRead(pin);
     }
 
-    float adc_raw = sum / INPUT_NO_ANALOG_READS;
+    uint32_t adc_raw = sum / INPUT_NO_ANALOG_READS;
     
     /*
     	Arduino Mega uses a 10 bit ADC, but the bottom 2 bits are dropped
     	in order to minimalize noise. 
     */
-    float adc = ((int)adc_raw) >> 2;
+    float adc = adc_raw >> 2;
     
     /* Ensure zero state. */
     if(adc < 10){
