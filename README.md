@@ -10,11 +10,19 @@ Demonstration of a PID controller. Tested on Arduino Mega.
 
 + LiquidCrystal_I2C: https://github.com/johnrickman/LiquidCrystal_I2C
 
-## Parts
+## Required parts
 
 + Arduino Mega
 
-+ Sharp 2y0a21 (Infrared Proximity Sensor) 
++ Sharp 2y0a21 Infrared Proximity Sensor
 
-+ SG90 (Servo Motor)
++ SG90 Servo Motor
+
++ 1602A LCD Display
+
++ Push buttons (3)
+
++ Potentiometers (4)
+
++ Parts from schematics
 
