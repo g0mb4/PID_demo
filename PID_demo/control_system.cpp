@@ -61,7 +61,7 @@ void RunControlSystem(ProgramState * state){
 
     if(OM(state) == MANUAL){
         RunManual(state);
-    } else if (OM(state) >= PID && OM(state) <= PID_AW3){
+    } else if (OM(state) >= PID_LP && OM(state) <= PID_AW2){
         RunPID(state);
     } else {
         Serial.print("ERROR: unknown state");
