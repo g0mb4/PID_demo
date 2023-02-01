@@ -52,10 +52,10 @@ static void UpdateOperationModeLayout(const ProgramState * state){
 	char op_mode = 'E';
 	switch(OM(state)){
 	    case MANUAL: op_mode = 'M'; break;
-	    case PID: op_mode = 'C'; break;
+	    case PID_LP: op_mode = 'L'; break;
+	    case PID_KAL: op_mode = 'K'; break;
 	    case PID_AW1: op_mode = '1'; break;
 	    case PID_AW2: op_mode = '2'; break;
-	    case PID_AW3: op_mode = '3'; break;
 	    case OPERATION_MODE_COUNT:
 	    default:
 	        op_mode = 'E';

@@ -24,7 +24,7 @@ void InitControlSystem(void){
 }
 
 static void RunManual(ProgramState * state){
-    PV(state) = ReadSensor();
+    PV(state) = ReadSensor(state);
 
     WriteServoMotor(state->manual);
 }
@@ -40,7 +40,7 @@ static void RunPID(ProgramState * state){
             + decision making   |
             + acting          --+
     */
-	PV(state) = ReadSensor();
+	PV(state) = ReadSensor(state);
 	
 	E(state) = SP(state) - PV(state);
 	DE(state) = E(state) - prev_error;
