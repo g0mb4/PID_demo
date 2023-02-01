@@ -34,4 +34,6 @@ void loop() {
     ReadUserInput(&state);
     UpdateDisplay(&state);
     RunControlSystem(&state);
+
+    DumpState(&state);
 }

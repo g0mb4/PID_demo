@@ -43,4 +43,6 @@ typedef struct {
 	float process_value;     /* sensor data */
 } ProgramState;
 
+void DumpState(const ProgramState * state);
+
 #endif
