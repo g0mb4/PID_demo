@@ -23,14 +23,14 @@ void InitUserInput(void){
 }
 
 /*
-	Generic function to read the value of an ADC pin into a specified range
-	using simple techniques to prevent noise.
+    Generic function to read the value of an ADC pin into a specified range
+    using simple techniques to prevent noise.
 */
 static float ReadAD(int pin, float min, float max){
     uint32_t sum = 0;
     
     /*
-    	Using a low-pass filter in order to minimalize noise.
+        Using a low-pass filter in order to minimalize noise.
     */
     for(uint8_t i = 0; i < INPUT_NO_ANALOG_READS; ++i){
         sum += analogRead(pin);
@@ -39,8 +39,8 @@ static float ReadAD(int pin, float min, float max){
     uint32_t adc_raw = sum / INPUT_NO_ANALOG_READS;
     
     /*
-    	Arduino Mega uses a 10 bit ADC, but the bottom 2 bits are dropped
-    	in order to minimalize noise. 
+        Arduino Mega uses a 10 bit ADC, but the bottom 2 bits are dropped
+        in order to minimalize noise.
     */
     float adc = adc_raw >> 2;
     
@@ -50,7 +50,7 @@ static float ReadAD(int pin, float min, float max){
     }
     
     /*
-    	ADC value is 8 bit now (0-255).
+        ADC value is 8 bit now (0-255).
     */
     return mapf(adc, 0, 255, min, max);
 }

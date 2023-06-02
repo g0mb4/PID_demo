@@ -9,21 +9,21 @@
     The resolution of the display is 16x2 in characters.
 */
 enum Row {
-	ROW_0 = 0,
-	ROW_1,
-	ROW_COUNT
+    ROW_0 = 0,
+    ROW_1,
+    ROW_COUNT
 };
 
-#define COLUMN_COUNT	16
+#define COLUMN_COUNT    16
 
 /*
     The possible display modes (screens).
 */
 enum DisplayMode {
-	DISPLAY_HOME = 0,
-	DISPLAY_PID1,
-	DISPLAY_PID2,
-	DISPLAY_MODE_COUNT
+    DISPLAY_HOME = 0,
+    DISPLAY_PID1,
+    DISPLAY_PID2,
+    DISPLAY_MODE_COUNT
 };
 
 void InitDisplay(void);

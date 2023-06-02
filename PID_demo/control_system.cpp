@@ -40,18 +40,18 @@ static void RunPID(ProgramState * state){
             + decision making   |
             + acting          --+
     */
-	PV(state) = ReadSensor(state);
-	
-	E(state) = SP(state) - PV(state);
-	DE(state) = E(state) - prev_error;
+    PV(state) = ReadSensor(state);
 
-	float control_signal = UpdateController(state, DELTA_TIME_MS);
-	
-	float acting_signal = mapf(control_signal, OUT_MIN, OUT_MAX, SERVO_MIN_POS, SERVO_MAX_POS);
-	WriteServoMotor(acting_signal);
+    E(state) = SP(state) - PV(state);
+    DE(state) = E(state) - prev_error;
 
-	prev_run_time = millis();
-	prev_error = E(state);
+    float control_signal = UpdateController(state, DELTA_TIME_MS);
+
+    float acting_signal = mapf(control_signal, OUT_MIN, OUT_MAX, SERVO_MIN_POS, SERVO_MAX_POS);
+    WriteServoMotor(acting_signal);
+
+    prev_run_time = millis();
+    prev_error = E(state);
 }
 
 void RunControlSystem(ProgramState * state){

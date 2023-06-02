@@ -37,8 +37,8 @@ static char empty_line[COLUMN_COUNT + 1] = "                ";
 static char float_buffer[10];
 
 static void ClearRow(int row){
-	lcd.setCursor(0, row);
-	lcd.print(empty_line);
+    lcd.setCursor(0, row);
+    lcd.print(empty_line);
 }
 
 /*
@@ -46,66 +46,66 @@ static void ClearRow(int row){
     and does not affect the clearing mechanism.
 */
 static void UpdateOperationModeLayout(const ProgramState * state){
-	lcd.setCursor(14, ROW_0);
-	lcd.print(state->is_running ? '*' : 'x');
-	
-	char op_mode = 'E';
-	switch(OM(state)){
-	    case MANUAL: op_mode = 'M'; break;
-	    case PID_LP: op_mode = 'L'; break;
-	    case PID_KAL: op_mode = 'K'; break;
-	    case PID_AW1: op_mode = '1'; break;
-	    case PID_AW2: op_mode = '2'; break;
-	    case OPERATION_MODE_COUNT:
-	    default:
-	        op_mode = 'E';
-	}
-	
-	lcd.print(op_mode);
+    lcd.setCursor(14, ROW_0);
+    lcd.print(state->is_running ? '*' : 'x');
+
+    char op_mode = 'E';
+    switch(OM(state)){
+        case MANUAL: op_mode = 'M'; break;
+        case PID_LP: op_mode = 'L'; break;
+        case PID_KAL: op_mode = 'K'; break;
+        case PID_AW1: op_mode = '1'; break;
+        case PID_AW2: op_mode = '2'; break;
+        case OPERATION_MODE_COUNT:
+        default:
+            op_mode = 'E';
+    }
+
+    lcd.print(op_mode);
 }
 
 static void HomeScreen(const ProgramState * state){
-	if(OM(state) == MANUAL){
-	    dtostrf(state->manual, 2, 2, float_buffer);
-	    buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "MOT=%s", float_buffer);
-	    
+    if(OM(state) == MANUAL){
+        dtostrf(state->manual, 2, 2, float_buffer);
+        buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "MOT=%s", float_buffer);
+
         if(state->is_running){
             dtostrf(PV(state), 2, 2, float_buffer);
             buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "SEN=%s", float_buffer);
         } else {
             buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
         }
-	} else {
-	    dtostrf(SP(state), 2, 2, float_buffer);
-	    buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "SP=%s", float_buffer);
-	    
-	    if(state->is_running){
-	        dtostrf(E(state), 2, 2, float_buffer);
-	        buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "e=%s", float_buffer);
-	    } else {
-	        buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
-	    }
-	}
+    } else {
+        dtostrf(SP(state), 2, 2, float_buffer);
+        buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "SP=%s", float_buffer);
+
+        if(state->is_running){
+            dtostrf(E(state), 2, 2, float_buffer);
+            buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "e=%s", float_buffer);
+        } else {
+            buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
+        }
+    }
 }
 
 static void PID1Screen(const ProgramState * state){
-	dtostrf(KP(state), 2, 2, float_buffer);
-	buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "k_P=%s", float_buffer);
-	
-	dtostrf(KI(state), 1, 5, float_buffer);
-	buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "k_I=%s", float_buffer);
+    dtostrf(KP(state), 2, 2, float_buffer);
+    buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "k_P=%s", float_buffer);
+
+    dtostrf(KI(state), 1, 5, float_buffer);
+    buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, "k_I=%s", float_buffer);
 }
 
 static void PID2Screen(const ProgramState * state){
-	dtostrf(KD(state), 3, 1, float_buffer);
-	buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "k_D=%s", float_buffer);
-	
-	buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
+    dtostrf(KD(state), 3, 1, float_buffer);
+    buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "k_D=%s", float_buffer);
+
+    buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
 }
 
 static void InternalErrorScreen(void){
-	buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "INTERNAL ERROR");
-	buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
+    buffer_count[ROW_0] = snprintf(buffer[ROW_0], COLUMN_COUNT, "INTERNAL ERROR");
+    buffer_count[ROW_1] = snprintf(buffer[ROW_1], COLUMN_COUNT, " ");
 }
 
 /*
@@ -132,23 +132,23 @@ static void DisplayBuffer(void){
 }
 
 void InitDisplay(void) {
-	lcd.init();
-	lcd.backlight();
+    lcd.init();
+    lcd.backlight();
 }
 
 void UpdateDisplay(const ProgramState * state) {
-	switch (DM(state)) {
-	case DISPLAY_HOME: HomeScreen(state); break;
-	case DISPLAY_PID1: PID1Screen(state); break;
-	case DISPLAY_PID2: PID2Screen(state); break;
-	case DISPLAY_MODE_COUNT:
-	default:
-		InternalErrorScreen();
-		break;
-	}
-	
-	DisplayBuffer();
-	UpdateOperationModeLayout(state);
+    switch (DM(state)) {
+    case DISPLAY_HOME: HomeScreen(state); break;
+    case DISPLAY_PID1: PID1Screen(state); break;
+    case DISPLAY_PID2: PID2Screen(state); break;
+    case DISPLAY_MODE_COUNT:
+    default:
+        InternalErrorScreen();
+        break;
+    }
+
+    DisplayBuffer();
+    UpdateOperationModeLayout(state);
 }
 
 /*
@@ -156,5 +156,5 @@ void UpdateDisplay(const ProgramState * state) {
     The screens will be cycling.
 */
 void StepDisplayMode(ProgramState * state){
-	DM(state) = (++DM(state)) % DISPLAY_MODE_COUNT;
+    DM(state) = (++DM(state)) % DISPLAY_MODE_COUNT;
 }
