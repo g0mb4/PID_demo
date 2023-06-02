@@ -17,6 +17,7 @@ static float AntiWindup1(float control_signal, float dI){
     return control_signal;
 }
 
+// TODO: Rework this.
 static void AntiWindup2(const ProgramState * state){
     /*
         Reset integrator.
