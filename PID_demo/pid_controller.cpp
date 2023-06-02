@@ -37,9 +37,7 @@ float UpdateController(const ProgramState * state, float delta_time) {
 
     if(OM(state) == PID_AW1){
         control_signal = AntiWindup1(control_signal, dI);
-    }
-
-    if(OM(state) == PID_AW2){
+    } else if(OM(state) == PID_AW2){
         AntiWindup2(state);
     }
 
